@@ -23,11 +23,16 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
 RUN docker-php-ext-install -j$(nproc) gd
 
 # LDAP
-RUN apt-get update && \
-    apt-get install libldap2-dev -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
-    docker-php-ext-install ldap
+RUN apt-get update \
+  && apt-get install libldap2-dev -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+  && docker-php-ext-install ldap
+
+# intl
+RUN apt-get update \
+  && apt-get install -y libicu-dev \
+  && docker-php-ext-install intl
 
 # xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
